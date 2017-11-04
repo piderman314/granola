@@ -19,3 +19,6 @@ script:
   - cmake -G "Unix Makefiles" -Dtest=ON
   - make
   - ctest -V
+
+notifications:
+  email: false
