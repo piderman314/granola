@@ -36,7 +36,9 @@ before_install:
   - cd "${TRAVIS_BUILD_DIR}"
 
 script:
-  - cmake -G "Unix Makefiles" -Dtest=ON
+  - mkdir build
+  - cd build
+  - cmake -Dtest=ON ..
   - make
   - ctest -V
 
