@@ -1,16 +1,5 @@
-language: cpp
-
 matrix:
   include:
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-      env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
     - os: linux
       addons:
         apt:
@@ -19,28 +8,44 @@ matrix:
           packages:
             - clang-5.0
       env:
-        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+        - TEST="Clang 5 without tests"
+      script:
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_CXX_COMPILER="clang++-5.0" ..
+        - make
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - TEST="GCC 7 with tests"
+      script:
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_CXX_COMPILER="g++-7" -Dtest=ON ..
+        - make
+        - ctest -V
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+      env:
+        - TEST="Clang 5 with tests"
+      script:
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_CXX_COMPILER="clang++-5.0" -Dtest=ON ..
+        - make
+        - ctest -V
 
-before_install:
-  - eval "${MATRIX_EVAL}"
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libgtest-dev valgrind
-  - sudo wget https://github.com/google/googletest/archive/release-1.7.0.tar.gz
-  - sudo tar xf release-1.7.0.tar.gz
-  - cd googletest-release-1.7.0
-  - sudo cmake -DBUILD_SHARED_LIBS=ON .
-  - sudo make
-  - sudo cp -a include/gtest /usr/include
-  - sudo cp -a libgtest_main.so libgtest.so /usr/lib/
-  - which valgrind
-  - cd "${TRAVIS_BUILD_DIR}"
-
-script:
-  - mkdir build
-  - cd build
-  - cmake -Dtest=ON ..
-  - make
-  - ctest -V
+language: cpp
 
 notifications:
   email: false

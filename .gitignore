@@ -27,6 +27,7 @@ CTestTestfile.cmake
 *.sln.docstates
 *.vcxproj.filters
 make.bat
+make_notest.bat
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
