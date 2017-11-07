@@ -27,7 +27,7 @@ ExternalProject_Add(
 ExternalProject_Get_Property(doctest source_dir)
 set(DOCTEST_INCLUDE_DIR ${source_dir}/doctest CACHE INTERNAL "Path to include folder for doctest")
 
-file(GLOB granola_SRC "include/*.h" "src/*.cpp" "src/*.c")
+file(GLOB granola_SRC "include/*.hpp" "src/*.cpp")
 
 if (test)
 	enable_testing()
