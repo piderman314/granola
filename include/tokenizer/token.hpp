@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOKENIZER_TOKEN_HPP
+#define TOKENIZER_TOKEN_HPP
 
 #include <string>
 
@@ -26,3 +27,5 @@ namespace granola::tokenizer {
 	};
 
 }
+
+#endif // TOKENIZER_TOKEN_HPP

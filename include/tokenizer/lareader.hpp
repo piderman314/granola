@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOKENIZER_LAREADER_HPP
+#define TOKENIZER_LAREADER_HPP
 
 #include "token.hpp"
 
@@ -16,3 +17,5 @@ namespace granola::tokenizer {
 	};
 
 }
+
+#endif // TOKENIZER_LAREADER_HPP
