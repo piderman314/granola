@@ -1,0 +1,25 @@
+image: Visual Studio 2017
+
+platform:
+  - x64
+
+configuration:
+  - Debug
+
+matrix:
+  fast_finish: true
+
+environment:
+  matrix:
+    - build_command: msbuild ALL_BUILD.vcxproj
+      test: -Dtest=OFF
+    - build_command: msbuild ALL_BUILD.vcxproj && ctest -V
+      test: -Dtest=ON
+
+before_build:
+  - mkdir build
+  - cd build
+  - cmake -G "Visual Studio 15 2017 Win64" %test% ..
+
+build_script:
+  - call %build_command%
