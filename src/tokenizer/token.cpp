@@ -1,4 +1,4 @@
-#include "token.hpp"
+#include "tokenizer/token.hpp"
 
 namespace granola::tokenizer {
 

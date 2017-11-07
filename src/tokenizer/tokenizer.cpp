@@ -1,4 +1,4 @@
-#include "tokenizer.hpp"
+#include "tokenizer/tokenizer.hpp"
 
 #include <fstream>
 #include <doctest.h>
