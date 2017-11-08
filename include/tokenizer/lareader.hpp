@@ -34,7 +34,7 @@ namespace granola::tokenizer {
 
 	};
 
-	class LAReaderException : std::exception {
+	class LAReaderException : public std::exception {
 
 	public:
 		std::string message;
