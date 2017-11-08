@@ -50,6 +50,93 @@ matrix:
         - cmake -DCMAKE_CXX_COMPILER="clang++-5.0" -Dtest=ON ..
         - make
         - ctest -V
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+            - libc++-dev
+            - libc++abi-dev
+      env:
+        - TEST="Clang 5 with cppcheck"
+      script:
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_CXX_COMPILER="clang++-5.0" -Dtest=ON -Dcppcheck=ON ..
+        - make
+        - make check
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+            - libc++-dev
+            - libc++abi-dev
+      env:
+        - TEST="Clang 5 with asan"
+      script:
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_CXX_COMPILER="clang++-5.0" -Dtest=ON -Dasan=ON ..
+        - make
+        - ctest -V
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+            - libc++-dev
+            - libc++abi-dev
+      env:
+        - TEST="Clang 5 with usan"
+      script:
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_CXX_COMPILER="clang++-5.0" -Dtest=ON -Dusan=ON ..
+        - make
+        - ctest -V           
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+            - libc++-dev
+            - libc++abi-dev
+      env:
+        - TEST="Clang 5 with tsan"
+      script:
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_CXX_COMPILER="clang++-5.0" -Dtest=ON -Dtsan=ON ..
+        - make
+        - ctest -V
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+            - libc++-dev
+            - libc++abi-dev
+            - valgrind
+      env:
+        - TEST="Clang 5 with valgrind"
+      script:
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_CXX_COMPILER="clang++-5.0" -Dtest=ON ..
+        - make
+        - ctest -VV -T memcheck
+        - cat /home/travis/build/piderman314/granola/build/Testing/Temporary/MemoryChecker.1.log
 
 language: cpp
 
