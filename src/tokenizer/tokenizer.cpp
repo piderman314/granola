@@ -70,7 +70,7 @@ namespace granola::tokenizer {
 		CHECK(result == "");
 		REQUIRE(tokens.size() == 3);
 		CHECK(tokens[0]->tokenType == TokenType::Comment);
-		CHECK(static_cast<Comment*>(tokens[0].get()) -> comment == "Comment 1");
+		CHECK(static_cast<Comment*>(tokens[0].get())->comment == "Comment 1");
 		CHECK(static_cast<Comment*>(tokens[1].get())->comment == "Comment 2");
 		CHECK(static_cast<Comment*>(tokens[2].get())->comment == "Comment 3");
 	}
