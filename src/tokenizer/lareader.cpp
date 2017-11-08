@@ -55,6 +55,12 @@ namespace granola::tokenizer {
 		return chars == EOS && la == NULL_CHAR;
 	}
 
+	void LAReader::skipLine() noexcept {
+		skipUntil(EOL);
+
+		mayRead(EOL_CHAR); // or EOS
+	}
+
 	std::string LAReader::readLine() noexcept {
 		std::string line = readUntil(EOL);
 
@@ -146,6 +152,17 @@ namespace granola::tokenizer {
 				CHECK(re.message == "Found character b, expected z");
 			}
 		}
+	}
+
+	TEST_CASE("LAReader skipLine") {
+		std::istringstream input{ "Line 1\nLine 2\nLine 3" };
+		LAReader laReader{ input };
+
+		CHECK(laReader.readLine() == "Line 1");
+		
+		laReader.skipLine();
+
+		CHECK(laReader.readLine() == "Line 3");
 	}
 
 	TEST_CASE("LAReader readLine") {

@@ -12,7 +12,7 @@
 
 namespace granola::tokenizer {
 
-	TokenizeResult tokenize(std::istream& stream) {
+	TokenizeResult tokenize(std::istream& stream) noexcept {
 		LAReader reader{ stream };
 
 		std::vector<std::unique_ptr<Token>> tokens;
@@ -21,7 +21,10 @@ namespace granola::tokenizer {
 			while (!reader.atEos()) {
 				if (reader.mayBe('#')) {
 					tokens.push_back(parseComment(reader));
+					continue;
 				}
+
+				reader.skipLine();
 			}
 		} catch (const LAReaderException& re) {
 			return std::make_tuple(re.message, std::move(tokens));
@@ -30,7 +33,7 @@ namespace granola::tokenizer {
 		return std::make_tuple(std::string(""), std::move(tokens));
 	}
 
-	TokenizeResult tokenize(const std::string& file) {
+	TokenizeResult tokenize(const std::string& file) noexcept {
 		if (file == "") {
 			return std::make_tuple("", std::vector<std::unique_ptr<Token>>());
 		}
@@ -73,6 +76,17 @@ namespace granola::tokenizer {
 		CHECK(static_cast<Comment*>(tokens[0].get())->comment == "Comment 1");
 		CHECK(static_cast<Comment*>(tokens[1].get())->comment == "Comment 2");
 		CHECK(static_cast<Comment*>(tokens[2].get())->comment == "Comment 3");
+	}
+
+	TEST_CASE("Parse unknown line") {
+		std::istringstream input("#Comment 1\n? What is this\n#Comment 2");
+		const auto[result, tokens] = tokenize(input);
+
+		CHECK(result == "");
+		REQUIRE(tokens.size() == 2);
+		CHECK(tokens[0]->tokenType == TokenType::Comment);
+		CHECK(static_cast<Comment*>(tokens[0].get())->comment == "Comment 1");
+		CHECK(static_cast<Comment*>(tokens[1].get())->comment == "Comment 2");
 	}
 
 }

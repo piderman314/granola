@@ -23,6 +23,7 @@ namespace granola::tokenizer {
 		bool mayRead(char c) noexcept;
 		void mustRead(char c);
 		bool atEos() const noexcept;
+		void skipLine() noexcept;
 		std::string readLine() noexcept;
 		void skipWhitespace() noexcept;
 

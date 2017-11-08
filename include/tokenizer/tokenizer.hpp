@@ -13,8 +13,8 @@ namespace granola::tokenizer {
 
 	using TokenizeResult = std::tuple<std::string, std::vector<std::unique_ptr<Token>>>;
 
-	TokenizeResult tokenize(std::istream& stream);
-	TokenizeResult tokenize(const std::string& file);
+	TokenizeResult tokenize(std::istream& stream) noexcept;
+	TokenizeResult tokenize(const std::string& file) noexcept;
 
 	namespace {
 		std::unique_ptr<Comment> parseComment(LAReader& reader);
