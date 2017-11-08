@@ -13,17 +13,20 @@ namespace granola::tokenizer {
 	};
 
 	class Token {
+	public:
 		const TokenType tokenType;
 
 	public:
 		Token(const TokenType tokenType);
 	};
 
-	class Comment : Token {
-		const std::string& comment;
+	class Comment : public Token {
+	public:
+		const std::string comment;
 
 	public:
 		Comment(const std::string& comment);
+		Comment(const std::string&& comment);
 	};
 
 }

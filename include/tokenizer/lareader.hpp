@@ -3,10 +3,13 @@
 
 #include "token.hpp"
 
+#include <functional>
 #include <istream>
 #include <vector>
 
 namespace granola::tokenizer {
+
+	using CharPredicate = std::function<bool(char)>;
 
 	class LAReader {
 	private:
@@ -19,10 +22,14 @@ namespace granola::tokenizer {
 		bool mayBe(char c) const noexcept;
 		bool mayRead(char c) noexcept;
 		void mustRead(char c);
+		bool atEos() const noexcept;
+		std::string readLine() noexcept;
+		void skipWhitespace() noexcept;
 
 	private:
 		void lookAhead() noexcept;
-		bool atEos() const noexcept;
+		void skipUntil(CharPredicate pred);
+		std::string readUntil(CharPredicate pred);
 
 	};
 
