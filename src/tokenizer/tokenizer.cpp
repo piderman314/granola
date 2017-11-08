@@ -12,17 +12,17 @@
 
 namespace granola::tokenizer {
 
-	auto tokenize(std::istream& stream) {
+	TokenizeResult tokenize(std::istream& stream) {
 		LAReader reader{ stream };
 
 		std::vector<Token> tokens;
 
-		return tokens;
+		return std::make_tuple("", tokens);
 	}
 
-	auto tokenize(const std::string& file) {
+	TokenizeResult tokenize(const std::string& file) {
 		if (file == "") {
-			return std::vector<Token>();
+			return std::make_tuple("", std::vector<Token>());
 		}
 
 		std::ifstream file_input{ file };
@@ -30,15 +30,17 @@ namespace granola::tokenizer {
 	}
 
 	TEST_CASE("Empty filename returns an empty list") {
-		auto tokens = tokenize("");
+		const auto [result, tokens] = tokenize("");
 
+		CHECK(result == "");
 		CHECK(tokens.size() == 0);
 	}
 
 	TEST_CASE("Empty input string returns an empty list") {
 		std::istringstream input("");
-		auto tokens = tokenize(input);
+		const auto[result, tokens] = tokenize(input);
 
+		CHECK(result == "");
 		CHECK(tokens.size() == 0);
 	}
 

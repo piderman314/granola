@@ -4,12 +4,15 @@
 #include "token.hpp"
 
 #include <istream>
+#include <tuple>
 #include <vector>
 
 namespace granola::tokenizer {
 
-	auto tokenize(std::istream& stream);
-	auto tokenize(const std::string& file);
+	using TokenizeResult = std::tuple<std::string, std::vector<Token>>;
+
+	TokenizeResult tokenize(std::istream& stream);
+	TokenizeResult tokenize(const std::string& file);
 
 }
 
