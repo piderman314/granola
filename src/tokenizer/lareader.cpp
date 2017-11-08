@@ -21,7 +21,7 @@ namespace granola::tokenizer {
 		const char NULL_CHAR = '\0';
 	}
 
-	LAReader::LAReader(std::istream& stream) : chars{ stream } {
+	LAReader::LAReader(std::istream& stream) : chars{ stream }, la{ NULL_CHAR } {
 		lookAhead();
 	}
 
