@@ -17,7 +17,7 @@ namespace granola::tokenizer {
 		char la;
 
 	public:
-		LAReader(std::istream& stream);
+		explicit LAReader(std::istream& stream);
 
 		bool mayBe(char c) const noexcept;
 		bool mayRead(char c) noexcept;
@@ -38,7 +38,7 @@ namespace granola::tokenizer {
 	public:
 		std::string message;
 
-		LAReaderException(std::string message) : message{ message } {}
+		explicit LAReaderException(const std::string& message) : message{ message } {}
 	};
 
 }

@@ -17,7 +17,7 @@ namespace granola::tokenizer {
 		const TokenType tokenType;
 
 	public:
-		Token(const TokenType tokenType);
+		explicit Token(const TokenType tokenType);
 	};
 
 	class Comment : public Token {
@@ -25,8 +25,8 @@ namespace granola::tokenizer {
 		const std::string comment;
 
 	public:
-		Comment(const std::string& comment);
-		Comment(const std::string&& comment);
+		explicit Comment(const std::string& comment);
+		explicit Comment(const std::string&& comment);
 	};
 
 }
