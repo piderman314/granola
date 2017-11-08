@@ -9,7 +9,8 @@ matrix:
             - llvm-toolchain-trusty-5.0
           packages:
             - clang-5.0
-            - libc++-dev            
+            - libc++-dev
+            - libc++abi-dev
       env:
         - TEST="Clang 5 without tests"
       script:
@@ -39,7 +40,8 @@ matrix:
             - llvm-toolchain-trusty-5.0
           packages:
             - clang-5.0
-            - libc++-dev            
+            - libc++-dev
+            - libc++abi-dev
       env:
         - TEST="Clang 5 with tests"
       script:
