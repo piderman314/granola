@@ -6,8 +6,6 @@
 #include <istream>
 #include <doctest.h>
 
-#include <iostream>
-
 #ifndef DOCTEST_CONFIG_DISABLE
 #include <sstream>
 #endif

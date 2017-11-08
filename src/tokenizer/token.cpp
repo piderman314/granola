@@ -1,7 +1,5 @@
 #include "tokenizer/token.hpp"
 
-#include <iostream>
-
 namespace granola::tokenizer {
 
 	Token::Token(const TokenType tokenType) : tokenType{ tokenType } {}
