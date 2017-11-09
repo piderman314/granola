@@ -15,7 +15,7 @@ namespace granola::tokenizer {
 	TokenizeResult tokenize(std::istream& stream) noexcept {
 		LAReader reader{ stream };
 
-		std::vector<std::unique_ptr<Token>> tokens;
+		Tokens tokens;
 
 		try {
 			while (!reader.atEos()) {
@@ -35,7 +35,7 @@ namespace granola::tokenizer {
 
 	TokenizeResult tokenize(const std::string& file) noexcept {
 		if (file == "") {
-			return std::make_tuple("", std::vector<std::unique_ptr<Token>>());
+			return std::make_tuple("", Tokens());
 		}
 
 		std::ifstream file_input{ file };

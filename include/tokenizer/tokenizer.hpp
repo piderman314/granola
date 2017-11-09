@@ -11,7 +11,7 @@
 
 namespace granola::tokenizer {
 
-	using TokenizeResult = std::tuple<std::string, std::vector<std::unique_ptr<Token>>>;
+	using TokenizeResult = std::tuple<std::string, Tokens>;
 
 	TokenizeResult tokenize(std::istream& stream) noexcept;
 	TokenizeResult tokenize(const std::string& file) noexcept;

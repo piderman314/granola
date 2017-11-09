@@ -1,7 +1,9 @@
 #ifndef TOKENIZER_TOKEN_HPP
 #define TOKENIZER_TOKEN_HPP
 
+#include <memory>
 #include <string>
+#include <vector>
 
 namespace granola::tokenizer {
 
@@ -28,6 +30,8 @@ namespace granola::tokenizer {
 		explicit Comment(const std::string& comment);
 		explicit Comment(const std::string&& comment);
 	};
+
+	using Tokens = std::vector<std::unique_ptr<Token>>;
 
 }
 
