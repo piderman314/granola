@@ -19,36 +19,58 @@ namespace granola::tokenizer {
 		const CharPredicate WHITESPACE = [](char c) { return c == SPACE_CHAR || c == TAB_CHAR; };
 
 		const char NULL_CHAR = '\0';
+
+		CharPredicate matchesChar(char toMatch) {
+			return [toMatch](char c) { return c == toMatch; };
+		}
 	}
 
-	LAReader::LAReader(std::istream& stream) : chars{ stream }, la{ NULL_CHAR } {
+	LAReader::LAReader(std::istream& stream) noexcept : chars{ stream }, la{ NULL_CHAR } {
 		lookAhead();
 	}
 
 	bool LAReader::mayBe(char c) const noexcept {
-		return !atEos() && c == la;
+		return mayBe(matchesChar(c));
+	}
+
+	bool LAReader::mayBe(CharPredicate pred) const noexcept {
+		return !atEos() && pred(la);
 	}
 
 	bool LAReader::mayRead(char c) noexcept {
-		if (atEos() || c != la) {
-			return false;
+		return mayRead(matchesChar(c)) == c;
+	}
+
+	char LAReader::mayRead(CharPredicate pred) noexcept {
+		if (atEos() || !pred(la)) {
+			return NULL_CHAR;
 		}
+
+		char result = la;
 
 		lookAhead();
 
-		return true;
+		return result;
+	}
+
+	char LAReader::mustRead(CharPredicate pred, std::string expected) {
+		if (atEos()) {
+			throw LAReaderException{ "Unexpected end of data, expected " + expected };
+		}
+
+		if (pred(la)) {
+			char result = la;
+
+			lookAhead();
+
+			return result;
+		}
+
+		throw LAReaderException{ "Found character " + std::string(1, la) + ", expected " + expected };
 	}
 
 	void LAReader::mustRead(char c) {
-		if (atEos()) {
-			throw LAReaderException { "Unexpected end of data, expected " + std::string(1, c) };
-		}
-
-		if (c != la) {
-			throw LAReaderException { "Found character " + std::string(1, la) + ", expected " + std::string(1, c) };
-		}
-
-		lookAhead();
+		mustRead(matchesChar(c), std::string(1, c));
 	}
 
 	bool LAReader::atEos() const noexcept {
@@ -84,13 +106,13 @@ namespace granola::tokenizer {
 		}
 	}
 
-	void LAReader::skipUntil(CharPredicate pred) {
+	void LAReader::skipUntil(CharPredicate pred) noexcept {
 		while (!atEos() && !pred(la)) {
 			lookAhead();
 		}
 	}
 
-	std::string LAReader::readUntil(CharPredicate pred) {
+	std::string LAReader::readUntil(CharPredicate pred) noexcept {
 		std::string result;
 
 		while (!atEos() && !pred(la)) {
@@ -124,7 +146,7 @@ namespace granola::tokenizer {
 	}
 
 	TEST_CASE("LAReader with text") {
-		std::istringstream input("abcdef");
+		std::istringstream input("abcdef+5.6q");
 		LAReader laReader{ input };
 
 		SUBCASE("mayBe") {
@@ -150,6 +172,21 @@ namespace granola::tokenizer {
 				CHECK_MESSAGE(false, "Should have thrown an exception");
 			} catch (const LAReaderException& re) {
 				CHECK(re.message == "Found character b, expected z");
+			}
+		}
+
+		SUBCASE("mustRead with predicate") {
+			try {
+				laReader.mustRead([](char c) { return c == 'a'; }, "the letter a");
+			} catch (const LAReaderException& re) {
+				CHECK_MESSAGE(false, re.message);
+			}
+
+			try {
+				laReader.mustRead([](char c) { return c == '1'; }, "the number one");
+				CHECK_MESSAGE(false, "Should have thrown an exception");
+			} catch (const LAReaderException& re) {
+				CHECK(re.message == "Found character b, expected the number one");
 			}
 		}
 	}

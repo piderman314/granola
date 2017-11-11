@@ -27,8 +27,17 @@ namespace granola::tokenizer {
 		const std::string comment;
 
 	public:
-		explicit Comment(const std::string& comment);
 		explicit Comment(const std::string&& comment);
+	};
+
+	class Vertex : public Token {
+	public:
+		const std::string x;
+		const std::string y;
+		const std::string z;
+
+	public:
+		explicit Vertex(const std::string&& x, const std::string&& y, const std::string&& z);
 	};
 
 	using Tokens = std::vector<std::unique_ptr<Token>>;

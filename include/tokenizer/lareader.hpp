@@ -17,11 +17,14 @@ namespace granola::tokenizer {
 		char la;
 
 	public:
-		explicit LAReader(std::istream& stream);
+		explicit LAReader(std::istream& stream) noexcept;
 
+		bool mayBe(CharPredicate pred) const noexcept;
 		bool mayBe(char c) const noexcept;
+		char mayRead(CharPredicate pred) noexcept;
 		bool mayRead(char c) noexcept;
-		void mustRead(char c);
+		char mustRead(CharPredicate pred, std::string expected); // throws LAReaderException
+		void mustRead(char c); // throws LAReaderException
 		bool atEos() const noexcept;
 		void skipLine() noexcept;
 		std::string readLine() noexcept;
@@ -29,8 +32,8 @@ namespace granola::tokenizer {
 
 	private:
 		void lookAhead() noexcept;
-		void skipUntil(CharPredicate pred);
-		std::string readUntil(CharPredicate pred);
+		void skipUntil(CharPredicate pred) noexcept;
+		std::string readUntil(CharPredicate pred) noexcept;
 
 	};
 
