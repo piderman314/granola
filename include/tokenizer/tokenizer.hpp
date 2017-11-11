@@ -18,7 +18,12 @@ namespace granola::tokenizer {
 
 	namespace {
 		std::unique_ptr<Comment> parseComment(LAReader& reader);
-		std::unique_ptr<Vertex> parseVertex(LAReader& reader);
+		std::unique_ptr<VertexLike> parseVertex(LAReader& reader);
+		std::unique_ptr<VertexLike> parseVertexTexture(LAReader& reader);
+		std::unique_ptr<VertexLike> parseVertexNormal(LAReader& reader);
+
+		std::unique_ptr<VertexLike> parseVertexLike(LAReader& reader, const TokenType tokenType);
+
 		std::string parseNumber(LAReader& reader);
 	}
 

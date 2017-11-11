@@ -37,6 +37,18 @@ namespace granola::tokenizer {
 				}
 
 				if (reader.mayBe('v')) {
+					reader.mustRead('v');
+
+					if (reader.mayBe('t')) {
+						tokens.push_back(parseVertexTexture(reader));
+						continue;
+					}
+
+					if (reader.mayBe('n')) {
+						tokens.push_back(parseVertexNormal(reader));
+						continue;
+					}
+
 					tokens.push_back(parseVertex(reader));
 					continue;
 				}
@@ -67,10 +79,27 @@ namespace granola::tokenizer {
 			return std::make_unique<Comment>(reader.readLine());
 		}
 
-		std::unique_ptr<Vertex> parseVertex(LAReader& reader) {
-			reader.mustRead('v');
+		std::unique_ptr<VertexLike> parseVertex(LAReader& reader) {
 			reader.skipWhitespace();
 
+			return parseVertexLike(reader, TokenType::Vertex);
+		}
+
+		std::unique_ptr<VertexLike> parseVertexTexture(LAReader& reader) {
+			reader.mustRead('t');
+			reader.skipWhitespace();
+
+			return parseVertexLike(reader, TokenType::VertexTexture);
+		}
+
+		std::unique_ptr<VertexLike> parseVertexNormal(LAReader& reader) {
+			reader.mustRead('n');
+			reader.skipWhitespace();
+
+			return parseVertexLike(reader, TokenType::VertexNormal);
+		}
+
+		std::unique_ptr<VertexLike> parseVertexLike(LAReader& reader, const TokenType tokenType) {
 			reader.skipWhitespace();
 			std::string x = parseNumber(reader);
 			reader.skipWhitespace();
@@ -79,7 +108,7 @@ namespace granola::tokenizer {
 			std::string z = parseNumber(reader);
 			reader.skipLine();
 
-			return std::make_unique<Vertex>(std::move(x), std::move(y), std::move(z));
+			return std::make_unique<VertexLike>(tokenType, std::move(x), std::move(y), std::move(z));
 		}
 
 		std::string parseNumber(LAReader& reader) {
@@ -144,21 +173,26 @@ namespace granola::tokenizer {
 	}
 
 	TEST_CASE("Parse Vertices") {
-		std::istringstream input("v 1 2 3\n#Some comment\n   v 4.7 -5.4 +6");
+		std::istringstream input("v 1 2 3\n#Some comment\n   vt 4.7 -5.4 +6\n \t vn -3 -2 -1");
 		const auto[result, tokens] = tokenize(input);
 
 		CHECK(result == "");
-		REQUIRE(tokens.size() == 3);
+		REQUIRE(tokens.size() == 4);
 
 		CHECK(tokens[0]->tokenType == TokenType::Vertex);
-		CHECK(static_cast<Vertex*>(tokens[0].get())->x == "1");
-		CHECK(static_cast<Vertex*>(tokens[0].get())->y == "2");
-		CHECK(static_cast<Vertex*>(tokens[0].get())->z == "3");
+		CHECK(static_cast<VertexLike*>(tokens[0].get())->x == "1");
+		CHECK(static_cast<VertexLike*>(tokens[0].get())->y == "2");
+		CHECK(static_cast<VertexLike*>(tokens[0].get())->z == "3");
 
-		CHECK(tokens[2]->tokenType == TokenType::Vertex);
-		CHECK(static_cast<Vertex*>(tokens[2].get())->x == "4.7");
-		CHECK(static_cast<Vertex*>(tokens[2].get())->y == "-5.4");
-		CHECK(static_cast<Vertex*>(tokens[2].get())->z == "+6");
+		CHECK(tokens[2]->tokenType == TokenType::VertexTexture);
+		CHECK(static_cast<VertexLike*>(tokens[2].get())->x == "4.7");
+		CHECK(static_cast<VertexLike*>(tokens[2].get())->y == "-5.4");
+		CHECK(static_cast<VertexLike*>(tokens[2].get())->z == "+6");
+
+		CHECK(tokens[3]->tokenType == TokenType::VertexNormal);
+		CHECK(static_cast<VertexLike*>(tokens[3].get())->x == "-3");
+		CHECK(static_cast<VertexLike*>(tokens[3].get())->y == "-2");
+		CHECK(static_cast<VertexLike*>(tokens[3].get())->z == "-1");
 	}
 
 	TEST_CASE("Parse Vertex Error") {

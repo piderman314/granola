@@ -6,5 +6,5 @@ namespace granola::tokenizer {
 
 	Comment::Comment(const std::string&& comment) : Token{ TokenType::Comment }, comment{ std::move(comment) } {}
 
-	Vertex::Vertex(const std::string&& x, const std::string&& y, const std::string&& z) : Token{ TokenType::Vertex }, x{ x }, y{ y }, z{ z } {}
+	VertexLike::VertexLike(const TokenType tokenType, const std::string&& x, const std::string&& y, const std::string&& z) : Token{ tokenType }, x{ x }, y{ y }, z{ z } {}
 }
